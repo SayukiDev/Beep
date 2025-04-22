@@ -87,5 +87,8 @@ func PlayFromReader(r io.ReadCloser, mediaType string, callback func()) error {
 func Stop() {
 	lock.Lock()
 	defer lock.Unlock()
+	if !playing {
+		return
+	}
 	speaker.Clear()
 }
