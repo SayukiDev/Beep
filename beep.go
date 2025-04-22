@@ -35,7 +35,6 @@ func PlayFromPath(path string, callback func()) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 	return PlayFromReader(
 		f,
 		strings.ToLower(
@@ -77,6 +76,7 @@ func PlayFromReader(r io.ReadCloser, mediaType string, callback func()) error {
 	}
 	playing = true
 	speaker.Play(beep.Seq(s, beep.Callback(func() {
+		defer r.Close()
 		defer s.Close()
 		callback()
 		lock.Unlock()
