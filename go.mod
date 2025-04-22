@@ -1,4 +1,4 @@
-module Beep
+module github.com/SayukiDev/Beep
 
 go 1.23
 
