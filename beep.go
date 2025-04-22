@@ -9,6 +9,8 @@ import (
 	"github.com/gopxl/beep/wav"
 	"io"
 	"os"
+	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 )
@@ -28,13 +30,22 @@ func Play(b []byte, mediaType string, callback func()) error {
 	return PlayFromReader(&bytesReadCloser{Reader: bytes.NewReader(b)}, mediaType, callback)
 }
 
-func PlayFromPath(path string, mediaType string, callback func()) error {
+func PlayFromPath(path string, callback func()) error {
 	f, err := os.Open(path)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
-	return PlayFromReader(f, mediaType, callback)
+	return PlayFromReader(
+		f,
+		strings.ToLower(
+			strings.TrimPrefix(
+				filepath.Ext(path),
+				".",
+			),
+		),
+		callback,
+	)
 }
 
 func PlayFromReader(r io.ReadCloser, mediaType string, callback func()) error {
